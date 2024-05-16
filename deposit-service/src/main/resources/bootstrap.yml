@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: deposit-service
+  cloud:
+    config:
+      uri: http://localhost:8081
+      fail-fast: true
+      password: test
+      username: test

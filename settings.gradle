@@ -1,0 +1,10 @@
+rootProject.name = 'banking_microservices'
+include 'account-service'
+include 'bill-service'
+include 'deposit-service'
+include 'config-service'
+include 'notofocation-service'
+include 'gateway'
+include 'registry'
+include 'notification-service'
+

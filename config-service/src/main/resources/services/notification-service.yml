@@ -1,0 +1,11 @@
+server:
+  port: 9999
+
+rabbitmq:
+  port: 5672
+  host: rabbitmq
+  username: test
+  password: test
+  listener:
+    direct:
+      default-requeue-rejected: true
