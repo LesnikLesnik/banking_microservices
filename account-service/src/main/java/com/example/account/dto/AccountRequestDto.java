@@ -12,8 +12,6 @@ import java.util.UUID;
 @Setter
 public class AccountRequestDto {
 
-    private UUID id;
-
     private String name;
 
     private String email;

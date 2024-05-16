@@ -12,7 +12,7 @@ public interface AccountMapper {
     AccountResponseDto toResponseDto(Account account);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "creationDate", expression = "java(new java.util.Date())") //TODO: что лучше, Date or Off*
+    @Mapping(target = "creationDate", expression = "java(new java.util.Date())")
     Account toAccount(AccountRequestDto accountRequestDTO);
 
 }
