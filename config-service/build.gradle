@@ -20,7 +20,7 @@ jar {
 }
 
 ext {
-    set('springCloudVersion', "Hoxton.SR1")
+    set('springCloudVersion', "2023.0.0")
 }
 
 dependencyManagement {
@@ -30,8 +30,9 @@ dependencyManagement {
 }
 
 dependencies {
-    implementation "org.springframework.cloud:spring-cloud-config-server"
+    implementation 'org.springframework.cloud:spring-cloud-config-server:4.0.4'
     implementation "org.springframework.boot:spring-boot-starter-security"
+    implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap:4.1.1'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 

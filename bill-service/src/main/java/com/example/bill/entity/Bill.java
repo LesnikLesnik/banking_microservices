@@ -1,5 +1,6 @@
 package com.example.bill.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -21,15 +22,21 @@ import java.util.UUID;
 public class Bill {
 
     @Id
+    @Column(name = "id")
     private UUID id;
 
+    @Column(name = "account_id")
     private UUID accountId;
 
+    @Column(name = "amount")
     private BigDecimal amount;
 
+    @Column(name = "isDefault")
     private Boolean isDefault;
 
+    @Column(name = "creationDate")
     private Date creationDate;
 
+    @Column(name = "overdraftEnabled")
     private Boolean overdraftEnabled;
 }

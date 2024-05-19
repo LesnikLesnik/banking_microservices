@@ -3,10 +3,10 @@ spring:
     name: registry
   cloud:
     config:
-      uri: http://localhost:8001
+      uri: ${SPRING_CONFIG_URI:http://localhost:8888}
       fail-fast: true
-      password: test
-      username: test
+      password: admin
+      username: user
 
 eureka:
   instance:
@@ -14,7 +14,7 @@ eureka:
   client:
     register-with-eureka: false
     fetch-registry: false
-    server:
-      waitTimeInMsWhenSyncEmpty: 0
+#    server:
+#      waitTimeInMsWhenSyncEmpty: 0
   server:
     peer-node-read-timeout-ms: 100000
