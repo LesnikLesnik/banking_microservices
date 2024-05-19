@@ -33,9 +33,24 @@ public class BillService {
         return billRepository.save(bill).getId();
     }
 
+    public BillResponseDto updateBill(UUID id, BillRequestDto billRequestDto) {
+        Bill bill = billMapper.toBill(billRequestDto);
+        bill.setId(id);
+        billRepository.save(bill);
+        return billMapper.toResponseDto(bill);
+    }
+
     public UUID deleteBill(UUID id) {
         billRepository.deleteById(id);
         return id;
+    }
+
+    public List<BillResponseDto> getBillsByAccountId(UUID id) {
+        Optional<Bill> billsByAccount = billRepository.getBillsByAccountId(id);
+        return billsByAccount
+                .stream()
+                .map(billMapper::toResponseDto)
+                .toList();
     }
 
 }

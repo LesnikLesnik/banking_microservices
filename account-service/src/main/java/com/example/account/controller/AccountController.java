@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-//@RequestMapping("/api/accounts") //TODO: у нас есть gateway(?) который и так отсылает нас по пути /accounts. Вопрос нужна ли здесь эта аннотация
+@RequestMapping("/api/accounts")
 public class AccountController {
 
     private final AccountService accountService;
@@ -21,7 +21,7 @@ public class AccountController {
         return accountService.createAccount(accountRequestDTO);
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public AccountResponseDto getAccount(@PathVariable UUID id){
         return accountService.getAccountById(id);
     }
