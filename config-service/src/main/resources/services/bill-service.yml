@@ -7,12 +7,10 @@ spring:
     properties:
   datasource:
     platform: postgres
-    url: jdbc:postgresql://localhost:5432/bill_service_db
+    url: jdbc:postgresql://${BILL_SERVICE_DATABASE_HOST:localhost}:5432/bill_service_db
     username: qwerty
     password: qwerty
     driver-class-name: 'org.postgresql.Driver'
 
 server:
-  servlet:
-    context-path: /bills
   port: 8082
