@@ -26,12 +26,17 @@ public class AccountController {
         return accountService.getAccountById(id);
     }
 
-    @GetMapping("/listAccounts")
+    @GetMapping
     public List<AccountResponseDto> getAllAccounts(){
         return accountService.getAllAccounts();
     }
 
-    @DeleteMapping("/delete/{id}")
+    @PutMapping("/{id}")
+    public AccountResponseDto updateAccount(@PathVariable UUID id, @RequestBody AccountRequestDto accountRequestDto){
+        return accountService.updateAccount(id, accountRequestDto);
+    }
+
+    @DeleteMapping("/{id}")
     public void deleteAccount(@PathVariable UUID id){
         accountService.deleteAccount(id);
     }
