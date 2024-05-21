@@ -16,7 +16,7 @@ public class AccountController {
 
     private final AccountService accountService;
 
-    @PostMapping("/create")
+    @PostMapping("/")
     public UUID createAccount(@RequestBody AccountRequestDto accountRequestDTO){
         return accountService.createAccount(accountRequestDTO);
     }

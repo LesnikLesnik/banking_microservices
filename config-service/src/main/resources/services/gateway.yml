@@ -10,27 +10,29 @@ ribbon:
   ReadTimeout: 20000
   ConnectTimeout: 20000
 
-zuul:
-  ignoredServices: '*'
-  host:
-    connect-timeout-millis: 20000
-    socket-timeout-millis: 20000
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
 
-  routes:
-    account-service:
-      path: /accounts/**
-      serviceId: account-service
-      stripPrefix: false
+      routes:
+        - id: account-service
+          uri: lb://account-service
+          predicates:
+            - Path=/account-service/**
 
-    bill-service:
-      path: /bills/**
-      serviceId: bill-service
-      stripPrefix: false
+        - id: bill-service
+          uri: lb://bill-service
+          predicates:
+            - Path=/bill-service/**
 
-    deposit-service:
-      path: /deposits/**
-      serviceId: deposit-service
-      stripPrefix: false
+        - id: deposit-service
+          uri: lb://deposit-service
+          predicates:
+            - Path=/deposit/**
 
 server:
   port: 8989

@@ -1,15 +1,19 @@
-package com.example.account.dto;
+package com.example.gateway.rest.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 @Getter
-@Setter
-public class AccountRequestDto {
+@AllArgsConstructor
+@NoArgsConstructor
+public class AccountResponseDto {
+
+    private UUID id;
 
     private String name;
 

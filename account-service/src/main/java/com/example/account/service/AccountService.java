@@ -1,7 +1,7 @@
 package com.example.account.service;
 
-import com.example.account.dto.AccountResponseDto;
 import com.example.account.dto.AccountRequestDto;
+import com.example.account.dto.AccountResponseDto;
 import com.example.account.entity.Account;
 import com.example.account.exception.AccountNotFoundException;
 import com.example.account.mapper.AccountMapper;
@@ -40,15 +40,15 @@ public class AccountService {
                 .toList();
     }
 
-//    public AccountResponseDto updateAccountById(UUID id, AccountRequestDto accountRequestDto) {
-//        Optional<Account> accountForUpdate = accountRepository.findById(id);
-//        accountForUpdate.get().setName(accountRequestDto.getName());
-//        accountForUpdate.get().setBills(accountRequestDto.getBills());
-//        accountForUpdate.get().setPhone(accountRequestDto.getPhone());
-//        accountForUpdate.get().setEmail(accountRequestDto.getEmail());
-//        return accountForUpdate.map(accountMapper::toResponseDto)
-//                .orElseThrow(() -> new AccountNotFoundException("Аккаунт с id: " + id + " не найден"));
-//    } TODO посмотреть работает ли такая вариацяи со stream
+    public AccountResponseDto updateAccount(UUID id, AccountRequestDto accountRequestDto) {
+        Account accountToUpdate = accountRepository.findById(id)
+                .orElseThrow(() -> new AccountNotFoundException("Аккаунт с id: " + id + " не найден"));
+        accountToUpdate.setId(id);
+        accountMapper.updateAccountFromDto(accountRequestDto, accountToUpdate);
+        Account updatedAccount = accountRepository.save(accountToUpdate);
+        return accountMapper.toResponseDto(updatedAccount);
+    }
+
 
     public void deleteAccount(UUID id) {
         accountRepository.deleteById(id);
