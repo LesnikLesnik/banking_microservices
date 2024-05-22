@@ -1,4 +1,4 @@
-package com.example.gateway.rest.dto;
+package com.example.deposit.rest.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +13,9 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class BillRequestDto {
+public class BillResponseDto {
+
+    private UUID id;
 
     private UUID accountId;
 

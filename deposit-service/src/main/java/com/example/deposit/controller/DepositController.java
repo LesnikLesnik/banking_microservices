@@ -1,8 +1,8 @@
-package com.example.gateway.controller;
+package com.example.deposit.controller;
 
-import com.example.gateway.dto.DepositRequestDto;
-import com.example.gateway.dto.DepositResponseDto;
-import com.example.gateway.service.DepositService;
+import com.example.deposit.dto.DepositRequestDto;
+import com.example.deposit.dto.DepositResponseDto;
+import com.example.deposit.service.DepositService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,4 +20,5 @@ public class DepositController {
     public DepositResponseDto deposit(@RequestBody DepositRequestDto depositRequestDto) {
         return depositService.deposit(depositRequestDto.getAccountId(), depositRequestDto.getBillId(), depositRequestDto.getAmount());
     }
+
 }

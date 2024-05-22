@@ -4,9 +4,11 @@ import com.example.account.dto.AccountRequestDto;
 import com.example.account.dto.AccountResponseDto;
 import com.example.account.service.AccountService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -27,8 +29,8 @@ public class AccountController {
     }
 
     @GetMapping
-    public List<AccountResponseDto> getAllAccounts(){
-        return accountService.getAllAccounts();
+    public Page<AccountResponseDto> getAllAccounts(@PageableDefault(page = 0, size = 15) Pageable pageable){
+        return accountService.getAllAccounts(pageable);
     }
 
     @PutMapping("/{id}")
@@ -39,5 +41,10 @@ public class AccountController {
     @DeleteMapping("/{id}")
     public void deleteAccount(@PathVariable UUID id){
         accountService.deleteAccount(id);
+    }
+
+    @PutMapping("/bill/{id}")
+    public AccountResponseDto addBillToAccount(@PathVariable UUID id, UUID billId){
+        return accountService.addBillIdToAccountById(id, billId);
     }
 }

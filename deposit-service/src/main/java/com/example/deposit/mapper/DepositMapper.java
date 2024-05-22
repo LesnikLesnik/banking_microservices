@@ -1,4 +1,4 @@
-package com.example.gateway.mapper;
+package com.example.deposit.mapper;
 
 import org.mapstruct.Mapper;
 

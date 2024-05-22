@@ -6,13 +6,16 @@ import com.example.bill.entity.Bill;
 import com.example.bill.exception.BillNotFoundException;
 import com.example.bill.mapper.BillMapper;
 import com.example.bill.repository.BillRepository;
+import com.example.bill.service.client.AccountServiceClient;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BillService {
@@ -20,6 +23,8 @@ public class BillService {
     private final BillRepository billRepository;
 
     private final BillMapper billMapper;
+
+    private final AccountServiceClient accountServiceClient;
 
     public BillResponseDto getBillById(UUID id) {
         Optional<Bill> billById = billRepository.findById(id);
@@ -30,6 +35,9 @@ public class BillService {
     public UUID createBill(BillRequestDto billRequestDto) {
         Bill bill = billMapper.toBill(billRequestDto);
         bill.setId(UUID.randomUUID());
+        log.info("Create bill completed {}", bill);
+        accountServiceClient.addBillToAccount(billRequestDto.getAccountId(), bill.getId());
+        log.info("Add bill to account with id {}", bill.getId());
         return billRepository.save(bill).getId();
     }
 

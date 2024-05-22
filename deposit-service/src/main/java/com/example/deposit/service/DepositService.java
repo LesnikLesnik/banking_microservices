@@ -1,25 +1,28 @@
-package com.example.gateway.service;
+package com.example.deposit.service;
 
-import com.example.gateway.dto.DepositResponseDto;
-import com.example.gateway.entity.Deposit;
-import com.example.gateway.exception.DepositServiceException;
-import com.example.gateway.mapper.DepositMapper;
-import com.example.gateway.repository.DepositRepository;
-import com.example.gateway.rest.AccountServiceClient;
-import com.example.gateway.rest.BillServiceClient;
-import com.example.gateway.rest.dto.AccountResponseDto;
-import com.example.gateway.rest.dto.BillRequestDto;
-import com.example.gateway.rest.dto.BillResponseDto;
+import com.example.deposit.dto.DepositResponseDto;
+import com.example.deposit.entity.Deposit;
+import com.example.deposit.exception.DepositServiceException;
+import com.example.deposit.mapper.BillDtoMapper;
+import com.example.deposit.repository.DepositRepository;
+import com.example.deposit.rest.AccountServiceClient;
+import com.example.deposit.rest.BillServiceClient;
+import com.example.deposit.rest.dto.AccountResponseDto;
+import com.example.deposit.rest.dto.BillRequestDto;
+import com.example.deposit.rest.dto.BillResponseDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class DepositService {
@@ -30,32 +33,47 @@ public class DepositService {
 
     private static final String ROUTING_KEY_DEPOSIT = "js.key.deposit";
 
-    private final DepositMapper depositMapper;
+    private final BillDtoMapper billDtoMapper;
     private final AccountServiceClient accountServiceClient;
 
     private final BillServiceClient billServiceClient;
 
     private final RabbitTemplate rabbitTemplate;
 
+    @Transactional
     public DepositResponseDto deposit(UUID accountId, UUID billId, BigDecimal amount) {
         if (accountId == null && billId == null) {
-            throw new DepositServiceException("Аккаунт с таким id: " + accountId + " или \n счет с id: " + billId + " не найден");
+            throw new DepositServiceException("Аккаунт и счет не заданы");
         }
-        if (billId != null){
+        if (billId != null) {
+            log.info("Start deposit to bill with id {}", billId);
             BillResponseDto billResponseDto = billServiceClient.getBillById(billId);
-            BillRequestDto billRequestDto = createBillRequest(amount, billResponseDto);
+            BillRequestDto billRequestDto = billDtoMapper.toBillRequestDto(billResponseDto);
+            log.info("Initial balance: {}", billRequestDto.getAmount());
+            billRequestDto.setAmount(billResponseDto.getAmount().add(amount));
+
             billServiceClient.update(billId, billRequestDto);
+            log.info("Bill`s amount update successful, end balance: {}", billRequestDto.getAmount());
 
             AccountResponseDto accountResponseDto = accountServiceClient.getAccountById(billResponseDto.getAccountId());
             depositRepository.save(new Deposit(UUID.randomUUID(), amount, billId, new Date(), accountResponseDto.getEmail()));
+            log.info("The deposit was successful");
 
             return createResponseDto(amount, accountResponseDto);
         }
+        log.info("Search default bill to account with id: {}", accountId);
         BillResponseDto defaultBill = getDefaultBill(accountId);
-        BillRequestDto billRequestDto = createBillRequest(amount, defaultBill);
+        BillRequestDto billRequestDto = billDtoMapper.toBillRequestDto(defaultBill);
+        log.info("Initial balance: {}", billRequestDto.getAmount());
+        billRequestDto.setAmount(defaultBill.getAmount().add(amount));
+
         billServiceClient.update(defaultBill.getId(), billRequestDto);
+        log.info("Bill`s amount update successful, end balance: {}", billRequestDto.getAmount());
+
         AccountResponseDto accountById = accountServiceClient.getAccountById(accountId);
         depositRepository.save(new Deposit(UUID.randomUUID(), amount, defaultBill.getId(), new Date(), accountById.getEmail()));
+        log.info("The deposit was successful");
+
         return createResponseDto(amount, accountById);
     }
 
@@ -72,24 +90,12 @@ public class DepositService {
         return depositResponseDto;
     }
 
-    private BillRequestDto createBillRequest(BigDecimal amount, BillResponseDto billResponseDto) {
-        BillRequestDto billRequestDto = new BillRequestDto();
-        billRequestDto.setAccountId(billResponseDto.getAccountId());
-        billRequestDto.setCreationDate(billResponseDto.getCreationDate());
-        billRequestDto.setIsDefault(billResponseDto.getIsDefault());
-        billRequestDto.setOverdraftEnabled(billResponseDto.getOverdraftEnabled());
-        billRequestDto.setAmount(billResponseDto.getAmount().add(amount));
-        return billRequestDto;
-    }
-
     private BillResponseDto getDefaultBill(UUID accountId) {
         return billServiceClient.getBillsByAccountId(accountId).stream()
                 .filter(BillResponseDto::getIsDefault)
                 .findAny()
-                .orElseThrow(() -> new RuntimeException("не получается найти базовый счет для id " + accountId));
+                .orElseThrow(() -> new RuntimeException("The default bill was not found for id " + accountId));
     }
 
 
 }
-
-//TODO сделать CRUD методы

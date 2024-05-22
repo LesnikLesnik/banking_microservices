@@ -1,4 +1,4 @@
-package com.example.gateway.entity;
+package com.example.deposit.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,10 +35,4 @@ public class Deposit {
     @Column(name = "email")
     private String email;
 
-    public Deposit(BigDecimal amount, UUID billId, Date dateOfCreate, String email) {
-        this.amount = amount;
-        this.billId = billId;
-        this.dateOfCreate = dateOfCreate;
-        this.email = email;
-    }
 }
