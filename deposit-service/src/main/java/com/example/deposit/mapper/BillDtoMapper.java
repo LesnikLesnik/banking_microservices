@@ -8,6 +8,6 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface BillDtoMapper {
 
-    @Mapping(target = "id", ignore = true)
+
     BillRequestDto toBillRequestDto(BillResponseDto billResponseDto);
 }
