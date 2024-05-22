@@ -46,7 +46,7 @@ public class BillService {
     }
 
     public List<BillResponseDto> getBillsByAccountId(UUID id) {
-        Optional<Bill> billsByAccount = billRepository.getBillsByAccountId(id);
+        List<Bill> billsByAccount = billRepository.getBillsByAccountId(id);
         return billsByAccount
                 .stream()
                 .map(billMapper::toResponseDto)

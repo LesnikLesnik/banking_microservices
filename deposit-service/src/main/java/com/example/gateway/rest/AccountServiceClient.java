@@ -12,5 +12,5 @@ import java.util.UUID;
 public interface AccountServiceClient {
 
     @RequestMapping(value = "/api/accounts/{id}", method = RequestMethod.GET)
-    AccountResponseDto getAccountById(@PathVariable("id") UUID accountId);
+    AccountResponseDto getAccountById(@PathVariable UUID accountId);
 }
