@@ -2,7 +2,7 @@ package com.example.gateway.service;
 
 import com.example.gateway.dto.DepositResponseDto;
 import com.example.gateway.entity.Deposit;
-import com.example.gateway.exception.DepositServiceNullAccountIdException;
+import com.example.gateway.exception.DepositServiceException;
 import com.example.gateway.mapper.DepositMapper;
 import com.example.gateway.repository.DepositRepository;
 import com.example.gateway.rest.AccountServiceClient;
@@ -38,8 +38,8 @@ public class DepositService {
     private final RabbitTemplate rabbitTemplate;
 
     public DepositResponseDto deposit(UUID accountId, UUID billId, BigDecimal amount) {
-        if (accountId == null){
-            throw new DepositServiceNullAccountIdException("Аккаунт с таким id: " + accountId + " не найден");
+        if (accountId == null && billId == null) {
+            throw new DepositServiceException("Аккаунт с таким id: " + accountId + " или \n счет с id: " + billId + " не найден");
         }
         if (billId != null){
             BillResponseDto billResponseDto = billServiceClient.getBillById(billId);
@@ -47,7 +47,7 @@ public class DepositService {
             billServiceClient.update(billId, billRequestDto);
 
             AccountResponseDto accountResponseDto = accountServiceClient.getAccountById(billResponseDto.getAccountId());
-            depositRepository.save(new Deposit(amount, billId, new Date(), accountResponseDto.getEmail()));
+            depositRepository.save(new Deposit(UUID.randomUUID(), amount, billId, new Date(), accountResponseDto.getEmail()));
 
             return createResponseDto(amount, accountResponseDto);
         }
@@ -55,7 +55,7 @@ public class DepositService {
         BillRequestDto billRequestDto = createBillRequest(amount, defaultBill);
         billServiceClient.update(defaultBill.getId(), billRequestDto);
         AccountResponseDto accountById = accountServiceClient.getAccountById(accountId);
-        depositRepository.save(new Deposit(amount, defaultBill.getId(), new Date(), accountById.getEmail()));
+        depositRepository.save(new Deposit(UUID.randomUUID(), amount, defaultBill.getId(), new Date(), accountById.getEmail()));
         return createResponseDto(amount, accountById);
     }
 
@@ -67,7 +67,7 @@ public class DepositService {
                     .convertAndSend(TOPIC_EXCHANGE_DEPOSIT, ROUTING_KEY_DEPOSIT,
                             objectMapper.writeValueAsString(depositResponseDto));
         } catch (JsonProcessingException e) {
-            throw new DepositServiceNullAccountIdException("Не получается отправить сообщение to RabbitMq");
+            throw new DepositServiceException("Не получается отправить сообщение to RabbitMq");
         }
         return depositResponseDto;
     }
