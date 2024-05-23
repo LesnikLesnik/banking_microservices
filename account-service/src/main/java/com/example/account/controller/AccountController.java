@@ -44,7 +44,7 @@ public class AccountController {
     }
 
     @PutMapping("/bill/{id}")
-    public AccountResponseDto addBillToAccount(@PathVariable UUID id, UUID billId){
+    public AccountResponseDto addBillToAccount(@PathVariable UUID id, @RequestParam("billId") UUID billId){
         return accountService.addBillIdToAccountById(id, billId);
     }
 }

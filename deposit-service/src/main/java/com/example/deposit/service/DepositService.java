@@ -40,6 +40,8 @@ public class DepositService {
 
     private final RabbitTemplate rabbitTemplate;
 
+
+
     @Transactional
     public DepositResponseDto deposit(UUID accountId, UUID billId, BigDecimal amount) {
         if (accountId == null && billId == null) {
@@ -49,7 +51,7 @@ public class DepositService {
             log.info("Start deposit to bill with id {}", billId);
             BillResponseDto billResponseDto = billServiceClient.getBillById(billId);
             BillRequestDto billRequestDto = billDtoMapper.toBillRequestDto(billResponseDto);
-            log.info("Initial balance: {}", billRequestDto.getAmount());
+            log.info("Initial balance: {}, sum to add {}", billRequestDto.getAmount(), amount);
             billRequestDto.setAmount(billResponseDto.getAmount().add(amount));
 
             billServiceClient.update(billId, billRequestDto);

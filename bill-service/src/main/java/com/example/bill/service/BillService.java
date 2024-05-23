@@ -10,6 +10,7 @@ import com.example.bill.service.client.AccountServiceClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,14 +33,18 @@ public class BillService {
                 .orElseThrow(() -> new BillNotFoundException("Счет с id " + id + " не найден"));
     }
 
+    @Transactional
     public UUID createBill(BillRequestDto billRequestDto) {
         Bill bill = billMapper.toBill(billRequestDto);
         bill.setId(UUID.randomUUID());
         log.info("Create bill completed {}", bill);
-        accountServiceClient.addBillToAccount(billRequestDto.getAccountId(), bill.getId());
-        log.info("Add bill to account with id {}", bill.getId());
-        return billRepository.save(bill).getId();
+        UUID savedBillId = billRepository.save(bill).getId();
+
+        accountServiceClient.addBillToAccount(billRequestDto.getAccountId(), savedBillId);
+        log.info("Add bill to account with id {}", savedBillId);
+        return savedBillId;
     }
+
 
     public BillResponseDto updateBill(UUID id, BillRequestDto billRequestDto) {
         Bill bill = billMapper.toBill(billRequestDto);
