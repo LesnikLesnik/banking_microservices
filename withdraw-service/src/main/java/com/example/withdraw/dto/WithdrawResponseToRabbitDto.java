@@ -1,4 +1,4 @@
-package com.example.deposit.dto;
+package com.example.withdraw.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,17 +6,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class DepositRequestDto {
-
-    private UUID accountId;
-
-    private UUID billId;
+public class WithdrawResponseToRabbitDto {
 
     private BigDecimal amount;
 
+    private String email;
 }

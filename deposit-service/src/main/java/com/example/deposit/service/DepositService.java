@@ -33,20 +33,15 @@ import java.util.UUID;
 public class DepositService {
 
     private final DepositRepository depositRepository;
+    private final DepositMapper depositMapper;
+    private final AccountServiceClient accountServiceClient;
+    private final BillServiceClient billServiceClient;
+    private final BillDtoMapper billDtoMapper;
+    private final RabbitTemplate rabbitTemplate;
 
     private static final String TOPIC_EXCHANGE_DEPOSIT = "js.deposit.notify.exchange";
 
     private static final String ROUTING_KEY_DEPOSIT = "js.key.deposit";
-
-    private final BillDtoMapper billDtoMapper;
-
-    private final DepositMapper depositMapper;
-    private final AccountServiceClient accountServiceClient;
-
-    private final BillServiceClient billServiceClient;
-
-    private final RabbitTemplate rabbitTemplate;
-
     public DepositResponseDto getDepositById(UUID id) {
         Deposit deposit = depositRepository.findById(id)
                 .orElseThrow(() -> new DepositServiceException("Депозит с id: " + id + " не найден"));
@@ -82,7 +77,7 @@ public class DepositService {
         log.info("Search default bill to account with id: {}", accountId);
         BillResponseDto defaultBill = getDefaultBill(accountId);
         BillRequestDto billRequestDto = billDtoMapper.toBillRequestDto(defaultBill);
-        log.info("Initial balance: {}", billRequestDto.getAmount());
+        log.info("Initial balance: {}, sum to add {}", billRequestDto.getAmount(), amount);
         billRequestDto.setAmount(defaultBill.getAmount().add(amount));
 
         billServiceClient.update(defaultBill.getId(), billRequestDto);

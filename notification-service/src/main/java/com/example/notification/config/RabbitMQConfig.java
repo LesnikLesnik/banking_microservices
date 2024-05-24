@@ -10,14 +10,12 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
+    //Deposit
     public static final String QUEUE_DEPOSIT = "js.deposit.notify";
 
     private static final String TOPIC_EXCHANGE_DEPOSIT = "js.deposit.notify.exchange";
 
     private static final String ROUTING_KEY_DEPOSIT = "js.key.deposit";
-
-    @Autowired
-    private AmqpAdmin amqpAdmin;
 
     @Bean
     public TopicExchange depositExchange() {
@@ -35,5 +33,31 @@ public class RabbitMQConfig {
                 .bind(queueDeposit())
                 .to(depositExchange())
                 .with(ROUTING_KEY_DEPOSIT);
+    }
+
+    //Withdraw
+
+    public static final String QUEUE_WITHDRAW = "js.withdraw.notify";
+
+    private static final String TOPIC_EXCHANGE_WITHDRAW = "js.deposit.withdraw.exchange";
+
+    private static final String ROUTING_KEY_WITHDRAW = "js.key.withdraw";
+
+    @Bean
+    public TopicExchange withdrawExchange() {
+        return new TopicExchange(TOPIC_EXCHANGE_WITHDRAW);
+    }
+
+    @Bean
+    public Queue queueWithdraw() {
+        return new Queue(QUEUE_WITHDRAW);
+    }
+
+    @Bean
+    public Binding withdrawBinding() {
+        return BindingBuilder
+                .bind(queueWithdraw())
+                .to(withdrawExchange())
+                .with(ROUTING_KEY_WITHDRAW);
     }
 }
