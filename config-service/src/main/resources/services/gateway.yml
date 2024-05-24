@@ -34,5 +34,10 @@ spring:
           predicates:
             - Path=/deposit/**
 
+        - id: withdraw-service
+          uri: lb://deposit-service
+          predicates:
+            - Path=/withdraw/**
+
 server:
   port: 8989

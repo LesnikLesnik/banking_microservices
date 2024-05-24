@@ -2,13 +2,6 @@ logging:
   level:
     org.springframework.security: INFO
 
-#spring:
-#  cloud:
-#    gateway:
-#      discovery:
-#        locator:
-#          enabled: true
-#          lower-case-service-id: true
 
 hystrix:
   command:
