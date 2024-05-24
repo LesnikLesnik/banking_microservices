@@ -47,9 +47,11 @@ public class BillService {
 
 
     public BillResponseDto updateBill(UUID id, BillRequestDto billRequestDto) {
+        log.info("Bill before updating {}", billRepository.findById(id));
         Bill bill = billMapper.toBill(billRequestDto);
         bill.setId(id);
         billRepository.save(bill);
+        log.info("Bill after updating {}", bill);
         return billMapper.toResponseDto(bill);
     }
 
