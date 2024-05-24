@@ -47,6 +47,12 @@ public class DepositService {
 
     private final RabbitTemplate rabbitTemplate;
 
+    public DepositResponseDto getDepositById(UUID id) {
+        Deposit deposit = depositRepository.findById(id)
+                .orElseThrow(() -> new DepositServiceException("Депозит с id: " + id + " не найден"));
+        return depositMapper.toDepositResponseDto(deposit);
+    }
+
     public Page<DepositResponseDto> getDepositsByBillId(UUID billId, Pageable pageable) {
         Page<Deposit> deposits = depositRepository.findAllByBillId(billId, pageable);
         return deposits.map(depositMapper::toDepositResponseDto);

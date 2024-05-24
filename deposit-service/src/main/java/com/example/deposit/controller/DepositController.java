@@ -18,18 +18,23 @@ public class DepositController {
 
     private final DepositService depositService;
 
+    @GetMapping("/{id}")
+    public DepositResponseDto getDepositById(@PathVariable UUID id) {
+        return depositService.getDepositById(id);
+    }
+
     @PostMapping("/")
     public DepositResponseToRabbitDto deposit(@RequestBody DepositRequestDto depositRequestDto) {
         return depositService.deposit(depositRequestDto.getAccountId(), depositRequestDto.getBillId(), depositRequestDto.getAmount());
     }
 
     @GetMapping("/bill/{id}")
-    public Page<DepositResponseDto> getDepositsByBillId(@PathVariable UUID id, Pageable pageable){
+    public Page<DepositResponseDto> getDepositsByBillId(@PathVariable UUID id, Pageable pageable) {
         return depositService.getDepositsByBillId(id, pageable);
     }
 
     @DeleteMapping("/{id}")
-    public UUID deleteDeposit(@PathVariable UUID id){
+    public UUID deleteDeposit(@PathVariable UUID id) {
         return depositService.deleteDeposit(id);
     }
 
