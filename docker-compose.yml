@@ -1,0 +1,145 @@
+version: '3.8'
+services:
+  config-service:
+    container_name: config-service
+    build: config-service
+    ports:
+      - 8888:8888
+    networks:
+      - config-network
+
+  registry:
+    container_name: registry
+    restart: always
+    build: registry
+    ports:
+      - 8761:8761
+    depends_on:
+      - config-service
+    networks:
+      - config-network
+    environment:
+      - SPRING_CONFIG_URI=http://config-service:8888
+
+  gateway:
+    container_name: gateway
+    restart: always
+    build: gateway
+    ports:
+      - 8989:8989
+    depends_on:
+      - config-service
+      - registry
+    networks:
+      - config-network
+    environment:
+      - SPRING_CONFIG_URI=http://config-service:8888
+
+  database:
+    image: 'postgres:16.2-alpine'
+    container_name: 'micro-train-pg-16.2'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: qwerty
+      POSTGRES_PASSWORD: qwerty
+    networks:
+      - config-network
+
+  account-service:
+    restart: on-failure
+    container_name: account-service
+    build: account-service
+    ports:
+      - 8081:8081
+    depends_on:
+      - config-service
+      - registry
+      - database
+    environment:
+      SPRING_CONFIG_URI=http://config-service:8888
+      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/account_service_db
+    networks:
+      - config-network
+
+  bill-service:
+    restart: on-failure
+    container_name: bill-service
+    build: bill-service
+    ports:
+      - 8082:8082
+    depends_on:
+      - config-service
+      - registry
+      - database
+    environment:
+      SPRING_CONFIG_URI=http://config-service:8888
+      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/bill_service_db
+    networks:
+      - config-network
+
+  deposit-service:
+    restart: on-failure
+    container_name: deposit-service
+    build: deposit-service
+    ports:
+      - 8083:8083
+    depends_on:
+      - config-service
+      - registry
+      - database
+    environment:
+      SPRING_CONFIG_URI: http://config-service:8888
+      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/deposit_service_db
+    networks:
+      - config-network
+
+  withdraw-service:
+    restart: on-failure
+    container_name: withdraw-service
+    build: withdraw-service
+    ports:
+      - 8084:8084
+    depends_on:
+      - config-service
+      - registry
+      - database
+    environment:
+      SPRING_CONFIG_URI: http://config-service:8888
+      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/withdraw_service_db
+    networks:
+      - config-network
+
+  notification-service:
+    restart: on-failure
+    container_name: notification-service
+    build: notification-service
+    depends_on:
+      - config-service
+      - registry
+    environment:
+      - SPRING_CONFIG_URI=http://config-service:8888
+    networks:
+      - config-network
+
+  rabbitmq: # login guest:guest
+    image: rabbitmq:3.12-management
+    hostname: rabbitmq
+    labels:
+      NAME: "rabbitmq"
+    ports:
+      - 5672:5672
+      - 15672:15672
+    depends_on:
+      - config-service
+      - registry
+      - account-service
+    networks:
+      - config-network
+
+networks:
+  config-network:
+    driver: bridge
+
+volumes:
+  pgdata:
