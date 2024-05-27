@@ -36,10 +36,10 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-amqp"
     implementation "org.springframework.cloud:spring-cloud-starter-config"
     implementation "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client"
-    implementation 'io.micrometer:micrometer-tracing:1.2.2'
+    implementation 'io.micrometer:micrometer-tracing'
 
     implementation "org.springframework.boot:spring-boot-starter-actuator"
-    implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap:4.1.1' //TODO
-    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-hystrix:2.2.10.RELEASE'
+    implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-hystrix'
     testImplementation "junit:junit"
 }
