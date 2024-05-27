@@ -3,7 +3,7 @@ server:
 
 rabbitmq:
   port: 5672
-  host: localhost
+  host: ${NOTIFICATION_SERVICE_DATABASE_HOST:localhost}
   username: guest
   password: guest
   listener:

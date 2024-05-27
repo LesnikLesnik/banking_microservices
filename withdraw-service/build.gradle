@@ -40,7 +40,6 @@ dependencies {
     implementation 'io.micrometer:micrometer-tracing'
 
     implementation "org.springframework.boot:spring-boot-starter-actuator"
-    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-hystrix:2.2.10.RELEASE'
     implementation "org.postgresql:postgresql"
 
     implementation 'org.mapstruct:mapstruct:1.5.5.Final'

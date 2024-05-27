@@ -7,7 +7,7 @@ spring:
     properties:
   datasource:
     platform: postgres
-    url: jdbc:postgresql://localhost:5432/withdraw_service_db
+    url: jdbc:postgresql://${WITHDRAW_SERVICE_DATABASE_HOST:localhost}:5432/withdraw_service_db
     username: qwerty
     password: qwerty
     driver-class-name: org.postgresql.Driver
@@ -20,3 +20,6 @@ spring:
     listener:
       direct:
         default-requeue-rejected: true
+
+server:
+  port: 8084

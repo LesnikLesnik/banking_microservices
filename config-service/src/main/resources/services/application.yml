@@ -2,15 +2,6 @@ logging:
   level:
     org.springframework.security: INFO
 
-
-hystrix:
-  command:
-    default:
-      execution:
-        isolation:
-          thread:
-            timeoutInMilliseconds: 20000
-
 eureka:
   instance:
     preferIpAddress: true
