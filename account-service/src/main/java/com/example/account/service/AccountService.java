@@ -63,17 +63,4 @@ public class AccountService {
         accountRepository.deleteById(id);
     }
 
-    public AccountResponseDto addBillIdToAccountById(UUID accountId, UUID billId) {
-        Account account = accountRepository.findById(accountId)
-                .orElseThrow(() -> new AccountNotFoundException("Аккаунт с id: " + accountId + " не найден"));
-        log.info("Starting add bill to account {}", account);
-        if (account.getBills() == null) {
-            account.setBills(new ArrayList<>());
-        }
-        account.getBills().add(billId);
-        Account accountWithNewBill = accountRepository.save(account);
-        log.info("Account's bills after add new bill {}", accountWithNewBill);
-        return accountMapper.toResponseDto(accountWithNewBill);
-    }
-
 }

@@ -35,7 +35,7 @@ spring:
             - Path=/deposit/**
 
         - id: withdraw-service
-          uri: lb://deposit-service
+          uri: lb://withdraw-service
           predicates:
             - Path=/withdraw/**
 

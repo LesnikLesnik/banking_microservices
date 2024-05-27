@@ -36,8 +36,8 @@ public class BillController {
                                       @RequestBody BillRequestDto billRequestDTO) {
        return billService.updateBill(id, billRequestDTO);
     }
-    @DeleteMapping("/delete/{id}")
-    public void deleteAccount(@PathVariable UUID id){
-        billService.deleteBill(id);
+    @DeleteMapping("/{id}")
+    public UUID deleteBill(@PathVariable UUID id){
+        return billService.deleteBill(id);
     }
 }

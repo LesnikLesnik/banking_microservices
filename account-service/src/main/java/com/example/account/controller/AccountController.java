@@ -43,8 +43,4 @@ public class AccountController {
         accountService.deleteAccount(id);
     }
 
-    @PutMapping("/bill/{id}")
-    public AccountResponseDto addBillToAccount(@PathVariable UUID id, @RequestParam("billId") UUID billId){
-        return accountService.addBillIdToAccountById(id, billId);
-    }
 }

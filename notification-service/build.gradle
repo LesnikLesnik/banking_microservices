@@ -39,7 +39,7 @@ dependencies {
     implementation 'io.micrometer:micrometer-tracing:1.2.2'
 
     implementation "org.springframework.boot:spring-boot-starter-actuator"
-    implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap:4.1.1'
+    implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap:4.1.1' //TODO
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-hystrix:2.2.10.RELEASE'
     testImplementation "junit:junit"
 }
