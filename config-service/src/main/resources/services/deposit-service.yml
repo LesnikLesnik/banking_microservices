@@ -14,7 +14,7 @@ spring:
 
   rabbitmq:
     port: 5672
-    host: ${NOTIFICATION_SERVICE_DATABASE_HOST:localhost}
+    host: ${RABBIT_HOST:localhost}
     username: guest
     password: guest
     listener:

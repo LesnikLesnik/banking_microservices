@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3'
 services:
   config-service:
     container_name: config-service
@@ -37,14 +37,17 @@ services:
 
   database:
     image: 'postgres:16.2-alpine'
-    container_name: 'micro-train-pg-16.2'
-    volumes:
-      - pgdata:/var/lib/postgresql/data
+    container_name: 'banking_microservices_db'
+    ports:
+      - 5432:5432
+    networks:
+      - config-network
     environment:
       POSTGRES_USER: qwerty
       POSTGRES_PASSWORD: qwerty
-    networks:
-      - config-network
+      POSTGRES_DB: banking_microservices
+    volumes:
+      - pgdata:/var/lib/postgresql/data
 
   account-service:
     restart: on-failure
@@ -57,8 +60,9 @@ services:
       - registry
       - database
     environment:
-      SPRING_CONFIG_URI=http://config-service:8888
-      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/account_service_db
+      - SPRING_CONFIG_URI=http://config-service:8888
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://database:5432/account_service_db
+      - ACCOUNT_SERVICE_DATABASE_HOST=database
     networks:
       - config-network
 
@@ -73,10 +77,12 @@ services:
       - registry
       - database
     environment:
-      SPRING_CONFIG_URI=http://config-service:8888
-      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/bill_service_db
+      - SPRING_CONFIG_URI=http://config-service:8888
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://database:5432/bill_service_db
+      - BILL_SERVICE_DATABASE_HOST=database
     networks:
       - config-network
+
 
   deposit-service:
     restart: on-failure
@@ -89,8 +95,10 @@ services:
       - registry
       - database
     environment:
-      SPRING_CONFIG_URI: http://config-service:8888
-      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/deposit_service_db
+      - SPRING_CONFIG_URI=http://config-service:8888
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://database:5432/deposit_service_db
+      - DEPOSIT_SERVICE_DATABASE_HOST=database
+      - RABBIT_HOST=rabbitmq
     networks:
       - config-network
 
@@ -105,8 +113,10 @@ services:
       - registry
       - database
     environment:
-      SPRING_CONFIG_URI: http://config-service:8888
-      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/withdraw_service_db
+      - SPRING_CONFIG_URI=http://config-service:8888
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://database:5432/withdraw_service_db
+      - WITHDRAW_SERVICE_DATABASE_HOST=database
+      - RABBIT_HOST=rabbitmq
     networks:
       - config-network
 
@@ -119,10 +129,11 @@ services:
       - registry
     environment:
       - SPRING_CONFIG_URI=http://config-service:8888
+      - RABBIT_HOST=rabbitmq
     networks:
       - config-network
 
-  rabbitmq: # login guest:guest
+  rabbitmq:
     image: rabbitmq:3.12-management
     hostname: rabbitmq
     labels:
