@@ -7,12 +7,10 @@ spring:
     properties:
   datasource:
     platform: postgres
-    url: jdbc:postgresql://localhost:5432/account_service_db
+    url: jdbc:postgresql://${ACCOUNT_SERVICE_DATABASE_HOST:localhost}:5432/account_service_db
     username: qwerty
     password: qwerty
     driver-class-name: 'org.postgresql.Driver'
 
 server:
-  servlet:
-    context-path: /accounts
   port: 8081

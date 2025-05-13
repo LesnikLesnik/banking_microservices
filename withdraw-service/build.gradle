@@ -1,0 +1,68 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.2.5'
+    id 'io.spring.dependency-management' version '1.1.4'
+    id "io.freefair.lombok" version "8.6"
+}
+
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'com.example.withdraw.WithdrawApplication'
+        )
+    }
+}
+
+ext {
+    set('springCloudVersion', "2023.0.0")
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+dependencies {
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-starter-amqp"
+    implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
+    implementation "org.springframework.cloud:spring-cloud-starter-config"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    implementation "org.springframework.cloud:spring-cloud-starter-openfeign"
+    implementation "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client"
+    implementation 'io.micrometer:micrometer-tracing'
+
+    implementation "org.springframework.boot:spring-boot-starter-actuator"
+    implementation "org.postgresql:postgresql"
+
+    implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "com.h2database:h2"
+    testImplementation "org.mockito:mockito-core"
+    testImplementation "org.assertj:assertj-core"
+    testImplementation "org.testng:testng"
+    testImplementation "org.jmockit:jmockit"
+    testImplementation "junit:junit"
+    testImplementation "org.junit.jupiter:junit-jupiter"
+    testRuntimeOnly "org.junit.vintage:junit-vintage-engine"
+}
+
+test {
+    useJUnitPlatform()
+}
+
+compileJava {
+    options.compilerArgs = [
+            '-Amapstruct.defaultComponentModel=spring'
+    ]
+    options.compilerArgs << '-parameters'
+}
