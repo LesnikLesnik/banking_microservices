@@ -30,8 +30,10 @@ dependencyManagement {
 }
 
 dependencies {
-    implementation 'org.springframework.cloud:spring-cloud-config-server'
+    implementation 'org.springframework.cloud:spring-cloud-config-server:4.0.4'
     implementation "org.springframework.boot:spring-boot-starter-security"
-    implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
+    implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap:4.1.1'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
+
+//TODO: разобраться с 35 строкой где тесты

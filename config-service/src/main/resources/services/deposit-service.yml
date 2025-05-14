@@ -7,19 +7,16 @@ spring:
     properties:
   datasource:
     platform: postgres
-    url: jdbc:postgresql://${DEPOSIT_SERVICE_DATABASE_HOST:localhost}:5432/deposit_service_db
-    username: qwerty
-    password: qwerty
+    url: jdbc:postgresql://localhost:5432/deposit_service_database
+    username: test
+    password: test
     driver-class-name: org.postgresql.Driver
 
   rabbitmq:
     port: 5672
-    host: ${RABBIT_HOST:localhost}
-    username: guest
-    password: guest
+    host: rabbitmq
+    username: test
+    password: test
     listener:
       direct:
         default-requeue-rejected: true
-
-server:
-  port: 8083

@@ -4,43 +4,35 @@ import com.example.account.dto.AccountRequestDto;
 import com.example.account.dto.AccountResponseDto;
 import com.example.account.service.AccountService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/accounts")
+//@RequestMapping("/api/accounts") //TODO: у нас есть gateway(?) который и так отсылает нас по пути /accounts. Вопрос нужна ли здесь эта аннотация
 public class AccountController {
 
     private final AccountService accountService;
 
-    @PostMapping("/")
+    @PostMapping("/create")
     public UUID createAccount(@RequestBody AccountRequestDto accountRequestDTO){
         return accountService.createAccount(accountRequestDTO);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     public AccountResponseDto getAccount(@PathVariable UUID id){
         return accountService.getAccountById(id);
     }
 
-    @GetMapping
-    public Page<AccountResponseDto> getAllAccounts(@PageableDefault(page = 0, size = 15) Pageable pageable){
-        return accountService.getAllAccounts(pageable);
+    @GetMapping("/listAccounts")
+    public List<AccountResponseDto> getAllAccounts(){
+        return accountService.getAllAccounts();
     }
 
-    @PutMapping("/{id}")
-    public AccountResponseDto updateAccount(@PathVariable UUID id, @RequestBody AccountRequestDto accountRequestDto){
-        return accountService.updateAccount(id, accountRequestDto);
-    }
-
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public void deleteAccount(@PathVariable UUID id){
         accountService.deleteAccount(id);
     }
-
 }

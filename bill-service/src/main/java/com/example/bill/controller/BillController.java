@@ -11,7 +11,6 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/bills")
 public class BillController {
 
     private final BillService billService;
@@ -26,18 +25,9 @@ public class BillController {
         return billService.getBillById(id);
     }
 
-    @GetMapping("/account/{id}")
-    public List<BillResponseDto> getBillsByAccountId(@PathVariable("id") UUID id){
-        return billService.getBillsByAccountId(id);
-    }
 
-    @PutMapping("/{id}")
-    public BillResponseDto updateBill(@PathVariable UUID id,
-                                      @RequestBody BillRequestDto billRequestDTO) {
-       return billService.updateBill(id, billRequestDTO);
-    }
-    @DeleteMapping("/{id}")
-    public UUID deleteBill(@PathVariable UUID id){
-        return billService.deleteBill(id);
+    @DeleteMapping("/delete/{id}")
+    public void deleteAccount(@PathVariable UUID id){
+        billService.deleteBill(id);
     }
 }
